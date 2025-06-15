@@ -25,19 +25,25 @@ class DatabaseHelper {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             email TEXT NOT NULL,
             name TEXT NOT NULL,
-            password TEXT NOT NULL
+            password TEXT NOT NULL,
+            sex TEXT NOT NULL,
+            phone TEXT NOT NULL,
+            date  TEXT NOT NULL
           )
         ''');
       },
     );
   }
 
-  Future<int> insertUser(String email, String name, String password) async {
+  Future<int> insertUser(String email, String name, String password,String sex,String phone,String date) async {
     final db = await database;
     return await db.insert(_tableName, {
       'email': email,
       'name': name,
       'password': password,
+      'sex': sex,
+      'phone': phone,
+      'date': date
     });
   }
 
