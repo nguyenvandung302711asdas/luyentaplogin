@@ -14,6 +14,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final passController = TextEditingController();
   final db = DatabaseHelper();
 
+
+
   void login() async {
     final user = await db.getUserByEmailAndPassword(
       emailController.text,
@@ -38,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // 🔷 Logo + Chào mừng
+            // Logo + Chào mừng
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 40),
@@ -49,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               child: Column(
                 children: [
-                  Image.asset('assets/logoo.png', height: 80), // 🔄 đổi path ảnh nếu cần
+                  Image.asset('assets/logoo.png', height: 80),
                   const SizedBox(height: 12),
                   const Text(
                     'Chào mừng trở lại',
@@ -69,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Column(
                 children: [
-                  // 🔶 Email
+                  // Email
                   TextField(
                     controller: emailController,
                     decoration: const InputDecoration(
@@ -80,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // 🔶 Password
+                  // Password
                   TextField(
                     controller: passController,
                     obscureText: true,
@@ -93,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   const SizedBox(height: 20),
 
-                  // 🔷 Đăng nhập
+                  // Đăng nhập
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
@@ -107,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
 
-                  // 🔷 Quên mật khẩu
+                  // Quên mật khẩu
                   TextButton.icon(
                     icon: const Icon(Icons.key),
                     onPressed: () {
@@ -118,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   const Text("hoặc"),
 
-                  // 🔷 Đăng ký
+                  // Đăng ký
                   OutlinedButton.icon(
                     icon: const Icon(Icons.person_add),
                     onPressed: () {

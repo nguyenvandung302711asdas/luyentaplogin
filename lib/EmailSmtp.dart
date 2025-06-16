@@ -34,3 +34,20 @@ Future<void> senEmailNotify(String toEmail) async {
     print('Email send failed: $e');
   }
 }
+
+
+Future<void> senEmailNotify_Register(String toEmail) async {
+  //cau hinh email
+  final smtpServer = gmail('nguyenvandung30271@gmail.com', 'zxmbfyayryyqitte');
+  final message = Message()
+    ..from = Address('nguyenvandung30271@gmail.com','App Support')
+    ..recipients.add(toEmail)
+    ..subject = 'Thông báo đăng kí'
+    ..text = 'Bạn đã đăng kí thành công';
+  try{
+    final sendReport = await send(message, smtpServer);
+    print('Email sent: ' + sendReport.toString());
+  }catch(e){
+    print('Email send failed: $e');
+  }
+}

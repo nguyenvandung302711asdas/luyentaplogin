@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:luyenthi/EmailSmtp.dart';
 import 'DatabaseHelper.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -32,7 +33,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final sex = sexController.text.trim();
 
     // Validate rỗng
-    if ([email, name, pass, confirmPass, phone, date, sex].any((e) => e.isEmpty)) {
+    if ([
+      email,
+      name,
+      pass,
+      confirmPass,
+      phone,
+      date,
+      sex,
+    ].any((e) => e.isEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Vui lòng điền đầy đủ thông tin.')),
       );
@@ -42,9 +51,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     // Validate định dạng email
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(email)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Email không hợp lệ.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Email không hợp lệ.')));
       return;
     }
 
@@ -67,9 +76,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     // Validate số điện thoại (10 chữ số)
     final phoneRegex = RegExp(r'^\d{10}$');
     if (!phoneRegex.hasMatch(phone)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Số điện thoại không hợp lệ.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Số điện thoại không hợp lệ.')));
       return;
     }
 
@@ -100,9 +109,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     // Lưu dữ liệu vào database
     await db.insertUser(email, name, pass, sex, phone, date);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Đăng ký thành công')),
-    );
+    senEmailNotify_Register(email);
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Đăng ký thành công')));
 
     // Xoá nội dung form
     emailController.clear();
@@ -117,7 +127,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
   }
 
-
   Future<void> _selectDate() async {
     final picked = await showDatePicker(
       context: context,
@@ -126,7 +135,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       lastDate: DateTime.now(),
     );
     if (picked != null) {
-      final formattedDate = "${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}";
+      final formattedDate =
+          "${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}";
       dateController.text = formattedDate;
     }
   }
@@ -134,10 +144,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Đăng ký'),
-
-      ),
+      appBar: AppBar(title: const Text('Đăng ký')),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -155,7 +162,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 child: Column(
                   children: [
-                    Image.asset('assets/logoo.png', height: 80), // 🔄 đổi path ảnh nếu cần
+                    Image.asset('assets/logoo.png', height: 80),
+                    // 🔄 đổi path ảnh nếu cần
                     const SizedBox(height: 12),
                     const Text(
                       'Chào mừng trở lại',
@@ -176,7 +184,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 decoration: InputDecoration(
                   hintText: 'Họ và tên',
                   prefixIcon: Icon(Icons.person),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -187,7 +197,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 decoration: InputDecoration(
                   hintText: 'Email',
                   prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -198,7 +210,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 decoration: InputDecoration(
                   hintText: 'Số điện thoại',
                   prefixIcon: Icon(Icons.phone),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -211,7 +225,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 decoration: InputDecoration(
                   hintText: 'dd/mm/yyyy',
                   prefixIcon: Icon(Icons.calendar_today),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -222,7 +238,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 decoration: InputDecoration(
                   hintText: 'Chọn giới tính',
                   prefixIcon: Icon(Icons.wc),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -235,10 +253,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   hintText: 'Mật khẩu',
                   prefixIcon: Icon(Icons.lock),
                   suffixIcon: IconButton(
-                    icon: Icon(hidePass ? Icons.visibility_off : Icons.visibility),
+                    icon: Icon(
+                      hidePass ? Icons.visibility_off : Icons.visibility,
+                    ),
                     onPressed: () => setState(() => hidePass = !hidePass),
                   ),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
               const SizedBox(height: 6),
@@ -259,10 +281,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   hintText: 'Xác nhận mật khẩu',
                   prefixIcon: Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
-                    icon: Icon(hideConfirm ? Icons.visibility_off : Icons.visibility),
+                    icon: Icon(
+                      hideConfirm ? Icons.visibility_off : Icons.visibility,
+                    ),
                     onPressed: () => setState(() => hideConfirm = !hideConfirm),
                   ),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -302,12 +328,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
+
                   onPressed: acceptTerms ? register : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                   child: const Text('Đăng ký tài khoản'),
                 ),
@@ -324,7 +353,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 label: const Text('Đăng nhập ngay'),
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.deepPurple,
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 20,
+                  ),
                   shape: RoundedRectangleBorder(
                     side: BorderSide(color: Colors.deepPurple),
                     borderRadius: BorderRadius.circular(8),
