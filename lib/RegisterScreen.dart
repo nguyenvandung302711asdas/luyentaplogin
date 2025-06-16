@@ -26,20 +26,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final email = emailController.text.trim();
     final name = nameController.text.trim();
     final pass = passController.text;
+    final confirmPass = confirmPassController.text;
     final phone = phoneController.text.trim();
     final date = dateController.text.trim();
     final sex = sexController.text.trim();
-    final confirmPass = confirmPassController.text;
 
-    // Kiểm tra các trường có rỗng không
-    if (email.isEmpty || name.isEmpty || pass.isEmpty || phone.isEmpty || date.isEmpty || sex.isEmpty || confirmPass.isEmpty) {
+    // Validate rỗng
+    if ([email, name, pass, confirmPass, phone, date, sex].any((e) => e.isEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Vui lòng điền đầy đủ thông tin.')),
       );
       return;
     }
 
-    // Kiểm tra mật khẩu và xác nhận mật khẩu
+    // Validate định dạng email
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Email không hợp lệ.')),
+      );
+      return;
+    }
+
+    // Validate độ dài mật khẩu
+    if (pass.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Mật khẩu phải có ít nhất 6 ký tự.')),
+      );
+      return;
+    }
+
+    // Kiểm tra khớp mật khẩu
     if (pass != confirmPass) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Mật khẩu và xác nhận mật khẩu không khớp.')),
@@ -47,7 +64,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    // Kiểm tra nếu chưa đồng ý điều khoản
+    // Validate số điện thoại (10 chữ số)
+    final phoneRegex = RegExp(r'^\d{10}$');
+    if (!phoneRegex.hasMatch(phone)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Số điện thoại không hợp lệ.')),
+      );
+      return;
+    }
+
+    // Validate ngày (dd/mm/yyyy)
+    final dateRegex = RegExp(r'^([0-2]\d|3[01])/([0]\d|1[0-2])/\d{4}$');
+    if (!dateRegex.hasMatch(date)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ngày không hợp lệ. Định dạng: dd/mm/yyyy')),
+      );
+      return;
+    }
+
+    // Kiểm tra giới tính hợp lệ
+    if (!(sex.toLowerCase() == 'nam' || sex.toLowerCase() == 'nữ')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Giới tính phải là "Nam" hoặc "Nữ".')),
+      );
+      return;
+    }
+
+    // Kiểm tra đồng ý điều khoản
     if (!acceptTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Bạn phải đồng ý với điều khoản sử dụng.')),
@@ -55,13 +98,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    // Thực hiện đăng ký
+    // Lưu dữ liệu vào database
     await db.insertUser(email, name, pass, sex, phone, date);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Đăng ký thành công')),
     );
 
-    // Xóa dữ liệu sau khi đăng ký
+    // Xoá nội dung form
     emailController.clear();
     nameController.clear();
     passController.clear();
@@ -83,7 +126,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       lastDate: DateTime.now(),
     );
     if (picked != null) {
-      dateController.text = "${picked.month}/${picked.day}/${picked.year}";
+      final formattedDate = "${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}";
+      dateController.text = formattedDate;
     }
   }
 
@@ -165,7 +209,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 readOnly: true,
                 onTap: _selectDate,
                 decoration: InputDecoration(
-                  hintText: 'mm/dd/yyyy',
+                  hintText: 'dd/mm/yyyy',
                   prefixIcon: Icon(Icons.calendar_today),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 ),

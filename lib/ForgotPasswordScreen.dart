@@ -16,7 +16,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   String generatePassword() {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    return List.generate(8, (index) => chars[Random().nextInt(chars.length)]).join();
+    return List.generate(8, (index) => chars[Random().nextInt(chars.length)])
+        .join();
   }
 
   void resetPassword() async {
@@ -59,7 +60,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
                 child: Column(
                   children: [
-                    Image.asset('assets/logoo.png', height: 80), // 🔄 đổi path ảnh nếu cần
+                    Image.asset('assets/logoo.png', height: 80),
+                    // 🔄 đổi path ảnh nếu cần
                     const SizedBox(height: 12),
                     const Text(
                       'Chào mừng trở lại',
@@ -102,7 +104,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 controller: emailController,
                 decoration: InputDecoration(
                   hintText: 'Địa chỉ email',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
                   prefixIcon: Icon(Icons.email),
                 ),
               ),
@@ -120,7 +123,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     backgroundColor: Colors.orange,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
               ),
@@ -137,7 +141,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
 
               const SizedBox(height: 10),
-
               const Text(
                 'Vẫn gặp vấn đề? Liên hệ hỗ trợ',
                 style: TextStyle(fontSize: 12, color: Colors.black54),
